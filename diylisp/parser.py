@@ -14,31 +14,50 @@ def parse(source):
     """Parse string representation of one *single* expression
     into the corresponding Abstract Syntax Tree."""
 
-    # check a single symbol
-    # test says 'a single symbol' but it wants to test 'foo', which for me is multiple symbols
-    # we implement repitition into the regular expression that we add to the program.
-    # symbol = re.compile('[...]') becomes symbol = re.compile('[...]+')
+    # defining regular expressions
     integer = re.compile('[0-9]+')
     symbol = re.compile('\D[A-Za-z<=>*\-+/0-9]+')
 
+    # parsing list of symbols
+    if source[0] == '(':
+
+      # remove brackets
+      pos_match_paren = find_matching_paren(source)
+      a = list(source)
+      a[0] = ""
+      a[pos_match_paren]=""
+      new_source = "".join(a)
+
+      # splitting source without bracket into a list and parsing seperate elements
+
+      parsed_list = []
+      split_list = split_exps(new_source)
+
+      for i in split_list:
+        parsed_i = parse(i)
+        parsed_list.append(parsed_i) # add parsed_i to parsed list
+
+      return parsed_list
 
 
-    #check booleans
+    # parse booleans
     if source == '#t':
       return True
     elif source == '#f':
       return False
 
-    #check integers
+    #parsing integers
     if re.match(integer, source): # return integer first in case integers are included in symbols
       return int(source)
 
-    # check symbols
+    #parsing symbols
     if re.match(symbol, source): # should be returned last cause a symbol could be most things
       return source
 
 
     raise NotImplementedError("unable to parse")
+
+
 ##
 ## Below are a few useful utility functions. These should come in handy when
 ## implementing `parse`. We don't want to spend the day implementing parenthesis
