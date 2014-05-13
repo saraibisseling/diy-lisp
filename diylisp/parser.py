@@ -19,14 +19,23 @@ def parse(source):
     # we implement repitition into the regular expression that we add to the program.
     # symbol = re.compile('[...]') becomes symbol = re.compile('[...]+')
     integer = re.compile('[0-9]+')
-    symbol = re.compile('[a-zA-Z]+')
+    symbol = re.compile('\D[A-Za-z<=>*\-+/0-9]+')
 
+
+
+    #check booleans
+    if source == '#t':
+      return True
+    elif source == '#f':
+      return False
+
+    #check integers
     if re.match(integer, source): # return integer first in case integers are included in symbols
-      return source
+      return int(source)
+
+    # check symbols
     if re.match(symbol, source): # should be returned last cause a symbol could be most things
       return source
-
-
 
 
     raise NotImplementedError("unable to parse")
