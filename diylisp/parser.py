@@ -9,16 +9,15 @@ This is the parser module, with the `parse` function which you'll implement as p
 the workshop. Its job is to convert strings into data structures that the evaluator can
 understand.
 """
+# defining regular expressions
+integer = re.compile('[0-9]+')
+symbol = re.compile('[a-zA-Z*<>+=-]+')
 
 def parse(source):
     """Parse string representation of one *single* expression
     into the corresponding Abstract Syntax Tree."""
 
-    # defining regular expressions
-    integer = re.compile('[0-9]+')
-    symbol = re.compile('\D[A-Za-z<=>*\-+/0-9]+')
-
-    # parsing list of symbols
+    # parsing lists
     if source[0] == '(':
 
       # remove brackets
@@ -35,25 +34,29 @@ def parse(source):
 
       for i in split_list:
         parsed_i = parse(i)
-        parsed_list.append(parsed_i) # add parsed_i to parsed list
+        parsed_list.append(parse(i)) # add parsed_i to parsed list
 
+      print parsed_list
       return parsed_list
 
 
     # parse booleans
     if source == '#t':
+      print True
       return True
     elif source == '#f':
+      print False
       return False
 
     #parsing integers
     if re.match(integer, source): # return integer first in case integers are included in symbols
+      print int(source)
       return int(source)
 
     #parsing symbols
     if re.match(symbol, source): # should be returned last cause a symbol could be most things
+      print source
       return source
-
 
     raise NotImplementedError("unable to parse")
 
