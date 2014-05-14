@@ -17,8 +17,13 @@ def parse(source):
     """Parse string representation of one *single* expression
     into the corresponding Abstract Syntax Tree."""
 
+    # throw exception if more than one expression
+    pos_missing_paren = find_missing_paren(source)
+    if pos_missing_paren == len(source)-1:
+      raise LispError("Extra large expression"
+
     # parsing lists
-    if source[0] == '(':
+    if source[0] == '('""
 
       # remove brackets
       pos_match_paren = find_matching_paren(source)
@@ -53,10 +58,12 @@ def parse(source):
       print int(source)
       return int(source)
 
+
     #parsing symbols
     if re.match(symbol, source): # should be returned last cause a symbol could be most things
       print source
       return source
+
 
     raise NotImplementedError("unable to parse")
 
@@ -70,6 +77,27 @@ def parse(source):
 def remove_comments(source):
     """Remove from a string anything in between a ; and a linebreak"""
     return re.sub(r";.*\n", "\n", source)
+
+def find_missing_paren(source):
+    """Given a string and the index of an opening parenthesis, determines
+    the index of the matching closing paren."""
+
+    end = len(source)-1
+    print source
+    print end
+    print source[end]
+    assert source[end] == ')'
+    pos = start
+    closed_brackets = 1
+    while closed_brackets > 0:
+        pos -= 1
+        if pos == 0:
+            raise LispError("Extra large expression: %s" % source[:end])
+        if source[pos] == ')':
+            open_brackets -= 1
+        if source[pos] == '(':
+            open_brackets += 1
+    return pos
 
 def find_matching_paren(source, start=0):
     """Given a string and the index of an opening parenthesis, determines
