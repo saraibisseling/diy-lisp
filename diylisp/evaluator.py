@@ -79,9 +79,8 @@ def evaluate(ast, env):
         return env.lookup(ast)
 
     if ast[0]=="define":
-        print ast[0]
-        print ast[1]
-        print ast[2]
+        if not len(ast)==3:
+            raise LispError("Wrong number of arguments")
         return env.set(ast[1], evaluate(ast[2], env))
 
 
