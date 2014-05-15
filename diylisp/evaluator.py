@@ -47,24 +47,25 @@ def evaluate(ast, env):
         b = evaluate(ast[2], env)
         return a == b
 
-    a = evaluate(ast[1], env)
-    b = evaluate(ast[2], env)
+    if ast[0] in math_operators:
+        a = evaluate(ast[1], env)
+        b = evaluate(ast[2], env)
+        if is_integer(a) and is_integer(b):
 
-    if is_integer(a) and is_integer(b) and ast[0] in math_operators:
-        if ast[0]=="+":
-            return a + b
-        if ast[0]=="*":
-            return a * b
-        if ast[0]=="-":
-            return a - b
-        if ast[0]=="/":
-            return a / b
-        if ast[0]=="mod":
-            return a % b
-        if ast[0]==">":
-            return a > b
-        if ast[0]=="<":
-            return a < b
+            if ast[0]=="+":
+                return a + b
+            if ast[0]=="*":
+                return a * b
+            if ast[0]=="-":
+                return a - b
+            if ast[0]=="/":
+                return a / b
+            if ast[0]=="mod":
+                return a % b
+            if ast[0]==">":
+                return a > b
+            if ast[0]=="<":
+                return a < b
 
 
     if ast[0]=="if":
