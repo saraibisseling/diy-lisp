@@ -9,63 +9,75 @@ This is the parser module, with the `parse` function which you'll implement as p
 the workshop. Its job is to convert strings into data structures that the evaluator can
 understand.
 """
-# defining regular expressions
+
+# below is Wisse's code. I'm using it so I can move on fully with the next parts of the assignment.
+
 integer = re.compile('[0-9]+')
 symbol = re.compile('[a-zA-Z*<>+=-]+')
+
 
 def parse(source):
     """Parse string representation of one *single* expression
     into the corresponding Abstract Syntax Tree."""
 
-    # throw exception if more than one expression
-    pos_missing_paren = find_missing_paren(source)
-    if pos_missing_paren == len(source)-1:
-      raise LispError("Extra large expression"
+    # pre-processing
+    if check_paren(source) == 1:
+        raise LispError('Incomplete expression')
+    if check_paren(source) == 2:
+        raise LispError("Expected EOF")
 
-    # parsing lists
-    if source[0] == '('""
+    source = remove_comments(source)
+    source = source.strip()
 
-      # remove brackets
-      pos_match_paren = find_matching_paren(source)
-      a = list(source)
-      a[0] = ""
-      a[pos_match_paren]=""
-      new_source = "".join(a)
-
-      # splitting source without bracket into a list and parsing seperate elements
-
-      parsed_list = []
-      split_list = split_exps(new_source)
-
-      for i in split_list:
-        parsed_i = parse(i)
-        parsed_list.append(parse(i)) # add parsed_i to parsed list
-
-      print parsed_list
-      return parsed_list
-
-
-    # parse booleans
+    # base-case for integer-types
     if source == '#t':
-      print True
-      return True
+        return True
     elif source == '#f':
-      print False
-      return False
+        return False
+    elif re.match(integer, source):
+        return int(source)
+    elif re.match(symbol, source):
+        return source
 
-    #parsing integers
-    if re.match(integer, source): # return integer first in case integers are included in symbols
-      print int(source)
-      return int(source)
+    if source[0] == "'":
+        adapted = "(quote " + source[1:] + ")"
+        return parse(adapted)
+
+    # recursive case
+    if source[0] == '(':
+
+        #remove brackets
+        last_paren = find_matching_paren(source)
+        lists = list(source)
+        lists[0] = ' '
+        lists[last_paren] = ' '
+        new_source = ''.join(lists)
+
+        # recurse on individual parts of the expression
+        split = split_exps(new_source)
+        parsed = []
+        for i in split:
+            parsed.append(parse(i))
+
+        return parsed
 
 
-    #parsing symbols
-    if re.match(symbol, source): # should be returned last cause a symbol could be most things
-      print source
-      return source
+def findOccurences(s, ch):
+    return [i for i, letter in enumerate(s) if letter == ch]
+
+def check_paren(expression):
+    """Finds all the open parentheses in the expression and all the closed parentheses. If there
+    are more open parentheses than closed are found, the function outputs 2, and 1 if vice versa."""
+
+    open_pars = findOccurences(expression, "(")
+    closed_pars = findOccurences(expression, ")")
+
+    if len(open_pars) < len(closed_pars):
+        return 2
+    if len(open_pars) > len(closed_pars):
+        return 1
 
 
-    raise NotImplementedError("unable to parse")
 
 
 ##
@@ -78,26 +90,6 @@ def remove_comments(source):
     """Remove from a string anything in between a ; and a linebreak"""
     return re.sub(r";.*\n", "\n", source)
 
-def find_missing_paren(source):
-    """Given a string and the index of an opening parenthesis, determines
-    the index of the matching closing paren."""
-
-    end = len(source)-1
-    print source
-    print end
-    print source[end]
-    assert source[end] == ')'
-    pos = start
-    closed_brackets = 1
-    while closed_brackets > 0:
-        pos -= 1
-        if pos == 0:
-            raise LispError("Extra large expression: %s" % source[:end])
-        if source[pos] == ')':
-            open_brackets -= 1
-        if source[pos] == '(':
-            open_brackets += 1
-    return pos
 
 def find_matching_paren(source, start=0):
     """Given a string and the index of an opening parenthesis, determines
