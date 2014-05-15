@@ -22,7 +22,7 @@ math_operators = ["+", "-", "/", ">", "<", "mod", "*"]
 def evaluate(ast, env):
     """Evaluate an Abstract Syntax Tree in the specified environment."""
 
-    print ast
+
 
 
     if is_boolean(ast): # imported from ast
@@ -74,6 +74,7 @@ def evaluate(ast, env):
         if evaluate(ast[1], env)==False:
             return evaluate(ast[3], env)
 
-
+    if is_symbol(ast):
+        return env.lookup(ast)
 
     raise LispError("Not able to evaluate")
