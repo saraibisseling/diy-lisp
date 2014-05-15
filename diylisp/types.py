@@ -33,8 +33,9 @@ class Environment:
         else: raise LispError(symbol)
 
     def extend(self, variables):
-
-        raise NotImplementedError("DIY")
+        new = self.variables
+        new.update(variables)
+        return Environment(new)
 
     def set(self, symbol, value):
         raise NotImplementedError("DIY")
