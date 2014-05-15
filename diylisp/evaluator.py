@@ -86,6 +86,10 @@ def evaluate(ast, env):
         return env.set(ast[1], evaluate(ast[2], env))
 
     if ast[0]=="lambda":
+        if not len(ast)==3:
+            raise LispError("number of arguments")
+        if not is_list(ast[1]):
+            raise LispError("params not a list")
         return Closure(env, ast[1], ast[2])
     print ast
     raise LispError("Not able to evaluate")
