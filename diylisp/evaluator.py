@@ -48,13 +48,24 @@ def evaluate(ast, env):
     b = ast[2]
 
     if is_integer(a) and is_integer(b) and ast[0] in math_operators:
-        parsed = parse(ast[0])
-        print parsed
-        result = a parsed b
-        return result
+        if ast[0]=="+":
+            return a + b
+        if ast[0]=="*":
+            return a * b
+        if ast[0]=="-":
+            return a - b
+        if ast[0]=="/":
+            return a / b
+        if ast[0]=="mod":
+            return a % b
+        if ast[0]==">":
+            return a > b
+        if ast[0]=="<":
+            return a < b
 
 
 
 
 
-    raise NotImplementedError("DIY")
+
+    raise LispError("Not able to evaluate")
