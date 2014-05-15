@@ -22,6 +22,8 @@ math_operators = ["+", "-", "/", ">", "<", "mod", "*"]
 def evaluate(ast, env):
     """Evaluate an Abstract Syntax Tree in the specified environment."""
 
+    print ast
+
     if is_boolean(ast): # imported from ast
       return ast
 
@@ -40,12 +42,12 @@ def evaluate(ast, env):
         if is_atom(evaluate(ast[1], env))==False:
             return False
 
-        a = ast[1]
-        b = ast[2]
+        a = evaluate(ast[1], env)
+        b = evaluate(ast[2], env)
         return a == b
 
-    a = ast[1]
-    b = ast[2]
+    a = evaluate(ast[1], env)
+    b = evaluate(ast[2], env)
 
     if is_integer(a) and is_integer(b) and ast[0] in math_operators:
         if ast[0]=="+":
