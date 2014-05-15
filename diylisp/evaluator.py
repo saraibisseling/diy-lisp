@@ -30,6 +30,14 @@ def evaluate(ast, env):
     if ast[0]=="atom":
         return is_atom(evaluate(ast[1], env))
 
+    if ast[0]=="eq":
+        if is_atom(evaluate(ast[1], env))==False:
+            return False
+
+        a = ast[1]
+        b = ast[2]
+        return a == b
+
 
 
 
