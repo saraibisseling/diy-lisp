@@ -13,7 +13,7 @@ understand.
 # below is Wisse's code. I'm using it so I can move on fully with the next parts of the assignment.
 
 integer = re.compile('[0-9]+')
-symbol = re.compile('[a-zA-Z*<>+=-]+')
+symbol = re.compile('[a-zA-Z*/<>+=-]+')
 
 
 def parse(source):
