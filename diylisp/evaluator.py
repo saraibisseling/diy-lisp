@@ -22,14 +22,18 @@ math_operators = ["+", "-", "/", ">", "<", "mod", "*"]
 def evaluate(ast, env):
     """Evaluate an Abstract Syntax Tree in the specified environment."""
 
+    if is_list(ast)==False:
+
+        if is_boolean(ast): # imported from ast
+            return ast
+
+        if is_integer(ast):
+            return ast
+
+        if is_closure(ast):
+            return evaluate(ast.body, ast.env)
 
 
-
-    if is_boolean(ast): # imported from ast
-      return ast
-
-    if is_integer(ast):
-        return ast
 
     if ast[0]=="quote":
         return ast[1]
@@ -37,14 +41,11 @@ def evaluate(ast, env):
     if ast[0]=="atom":
         return is_atom(evaluate(ast[1], env))
 
-
-
     if ast[0]=="eq":
-        if is_atom(evaluate(ast[1], env))==False:
-            return False
-
         a = evaluate(ast[1], env)
         b = evaluate(ast[2], env)
+        if is_atom(a)==False or is_atom(b)==False:
+            return False
         return a == b
 
     if ast[0] in math_operators:
@@ -74,10 +75,6 @@ def evaluate(ast, env):
         if evaluate(ast[1], env)==False:
             return evaluate(ast[3], env)
 
-
-    if is_symbol(ast):
-        return env.lookup(ast)
-
     if ast[0]=="define":
         if not len(ast)==3:
             raise LispError("Wrong number of arguments")
@@ -94,17 +91,23 @@ def evaluate(ast, env):
 
     if is_closure(ast[0]):
         closure = ast[0]
-        print closure
         arguments = ast[1:]
-        print arguments
         parameters = closure.params
-        print parameters
         n = len(arguments)
-        print n
         for i in range(n):
-            print arguments[i], parameters[i]
             closure.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(closure.body, closure.env)
+
+
+    if is_symbol(ast[0]):
+        print ast[0]
+        value = env.lookup(ast[0])
+        print value
+        print env
+        print evaluate(value, env)
+        return evaluate(value, env)
+
+
 
 
     print ast
