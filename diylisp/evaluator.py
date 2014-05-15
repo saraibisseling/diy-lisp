@@ -27,6 +27,10 @@ def evaluate(ast, env):
     if ast[0]=="quote":
         return ast[1]
 
+    if ast[0]=="atom":
+        return is_atom(evaluate(ast[1], env))
+
+
 
 
 
