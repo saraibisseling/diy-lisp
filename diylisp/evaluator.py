@@ -74,7 +74,16 @@ def evaluate(ast, env):
         if evaluate(ast[1], env)==False:
             return evaluate(ast[3], env)
 
+
     if is_symbol(ast):
         return env.lookup(ast)
 
+    if ast[0]=="define":
+        print ast[0]
+        print ast[1]
+        print ast[2]
+        return env.set(ast[1], evaluate(ast[2], env))
+
+
+    print ast
     raise LispError("Not able to evaluate")
