@@ -85,6 +85,7 @@ def evaluate(ast, env):
             raise LispError("non-symbol")
         return env.set(ast[1], evaluate(ast[2], env))
 
-
+    if ast[0]=="lambda":
+        return Closure(env, ast[1], ast[2])
     print ast
     raise LispError("Not able to evaluate")
