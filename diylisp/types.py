@@ -38,4 +38,5 @@ class Environment:
         return Environment(new)
 
     def set(self, symbol, value):
+        return self.variables.update({symbol: value})
         raise NotImplementedError("DIY")
