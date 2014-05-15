@@ -24,6 +24,7 @@ def evaluate(ast, env):
 
     print ast
 
+
     if is_boolean(ast): # imported from ast
       return ast
 
@@ -66,7 +67,11 @@ def evaluate(ast, env):
             return a < b
 
 
-
+    if ast[0]=="if":
+        if evaluate(ast[1], env)==True:
+            return evaluate(ast[2], env)
+        if evaluate(ast[1], env)==False:
+            return evaluate(ast[3], env)
 
 
 
