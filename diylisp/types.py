@@ -33,7 +33,7 @@ class Environment:
         else: raise LispError(symbol)
 
     def extend(self, variables):
-        new = self.variables
+        new = self.variables.copy()
         new.update(variables)
         return Environment(new)
 
