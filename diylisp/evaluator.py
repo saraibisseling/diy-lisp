@@ -94,7 +94,17 @@ def evaluate(ast, env):
 
     if is_closure(ast[0]):
         closure = ast[0]
-        return evaluate(closure.body, env)
+        print closure
+        arguments = ast[1:]
+        print arguments
+        parameters = closure.params
+        print parameters
+        n = len(arguments)
+        print n
+        for i in range(n):
+            print arguments[i], parameters[i]
+            closure.env.set(parameters[i], evaluate(arguments[i], env))
+        return evaluate(closure.body, closure.env)
 
 
     print ast
