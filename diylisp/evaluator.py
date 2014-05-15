@@ -91,5 +91,11 @@ def evaluate(ast, env):
         if not is_list(ast[1]):
             raise LispError("params not a list")
         return Closure(env, ast[1], ast[2])
+
+    if is_closure(ast[0]):
+        closure = ast[0]
+        return evaluate(closure.body, env)
+
+
     print ast
     raise LispError("Not able to evaluate")
