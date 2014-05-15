@@ -38,5 +38,7 @@ class Environment:
         return Environment(new)
 
     def set(self, symbol, value):
+        if symbol in self.variables:
+            raise LispError("already defined")
         return self.variables.update({symbol: value})
         raise NotImplementedError("DIY")
