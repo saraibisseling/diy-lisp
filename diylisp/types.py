@@ -6,6 +6,9 @@ This module holds some types we'll have use for along the way.
 It's your job to implement the Closure and Environment types.
 The LispError class you can have for free :)
 """
+import re
+re_integer = re.compile('[0-9]+')
+re_symbol = re.compile('[a-zA-Z*/<>+=-]+')
 
 class LispError(Exception): 
     """General lisp error class."""
@@ -27,7 +30,7 @@ class Environment:
     def lookup(self, symbol):
         if symbol in self.variables:
             return self.variables[symbol]
-        else: raise LispError("not in environment")
+        else: raise LispError(symbol)
 
     def extend(self, variables):
 
