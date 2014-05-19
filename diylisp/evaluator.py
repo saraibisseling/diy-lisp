@@ -81,9 +81,14 @@ def evaluate(ast, env):
             raise LispError("Wrong number of arguments")
         if not is_symbol(ast[1]):
             raise LispError("non-symbol")
-        return env.set(ast[1], evaluate(ast[2], env))
+        s = ast[1]
+        v  = evaluate(ast[2], env)
+        env.set(s, v)
+        print s
+        return s
 
     if ast[0]=="lambda":
+        print ast[0]
         print ast[0]
         if not len(ast)==3:
             raise LispError("number of arguments")
@@ -96,7 +101,10 @@ def evaluate(ast, env):
         closure = ast[0]
         arguments = ast[1:]
         parameters = closure.params
+        m = len(parameters)
         n = len(arguments)
+        if not n == m:
+            raise LispError("wrong number of arguments, expected %d got %d" % ((m), n))
         for i in range(n):
             closure.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(closure.body, closure.env)
@@ -107,7 +115,10 @@ def evaluate(ast, env):
         print clos
         arguments = ast[1:]
         parameters = clos.params
+        m = len(parameters)
         n = len(arguments)
+        if not n == m:
+            raise LispError("wrong number of arguments, expected %d got %d" % ((m), n))
         for i in range(n):
             clos.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(clos.body, clos.env)
@@ -117,11 +128,15 @@ def evaluate(ast, env):
         print clos
         arguments = ast[1:]
         parameters = clos.params
+        m = len(parameters)
         n = len(arguments)
+        if not n == m:
+            raise LispError("wrong number of arguments, expected %d got %d" % ((m), n))
+
         for i in range(n):
             clos.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(clos.body, clos.env)
-
+    else: raise LispError("not a function")
 
 
     print ast
