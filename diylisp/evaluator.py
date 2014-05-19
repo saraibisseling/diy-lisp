@@ -84,11 +84,13 @@ def evaluate(ast, env):
         return env.set(ast[1], evaluate(ast[2], env))
 
     if ast[0]=="lambda":
+        print ast[0]
         if not len(ast)==3:
             raise LispError("number of arguments")
         if not is_list(ast[1]):
             raise LispError("params not a list")
         return Closure(env, ast[1], ast[2])
+
 
     if is_closure(ast[0]):
         closure = ast[0]
@@ -102,6 +104,7 @@ def evaluate(ast, env):
 
     if is_symbol(ast[0]):
         clos = env.lookup(ast[0])
+        print clos
         arguments = ast[1:]
         parameters = clos.params
         n = len(arguments)
@@ -109,15 +112,15 @@ def evaluate(ast, env):
             clos.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(clos.body, clos.env)
 
-
-    #if is_symbol(ast[0]):
-    #    print ast[0]
-    #    value = env.lookup(ast[0])
-    #    print value
-    #    print env
-    #    print evaluate(value, env)
-    #    return evaluate(value, env)
-    #
+    if is_list(ast[0]):
+        clos = evaluate(ast[0], env)
+        print clos
+        arguments = ast[1:]
+        parameters = clos.params
+        n = len(arguments)
+        for i in range(n):
+            clos.env.set(parameters[i], evaluate(arguments[i], env))
+        return evaluate(clos.body, clos.env)
 
 
 
