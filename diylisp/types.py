@@ -44,4 +44,4 @@ class Environment:
         if symbol in self.variables:
             raise LispError("already defined")
         return self.variables.update({symbol: value})
-        raise NotImplementedError("DIY")
+

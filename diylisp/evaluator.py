@@ -23,19 +23,20 @@ def evaluate(ast, env):
     """Evaluate an Abstract Syntax Tree in the specified environment."""
 
 
-
-    if is_boolean(ast): # imported from ast
+    # ast = boolean
+    if is_boolean(ast):
       return ast
 
+    # ast = integer
     if is_integer(ast):
         return ast
 
+    # ast starts with "quote"
     if ast[0]=="quote":
         return ast[1]
 
     if ast[0]=="atom":
         return is_atom(evaluate(ast[1], env))
-
 
 
     if ast[0]=="eq":
@@ -66,13 +67,11 @@ def evaluate(ast, env):
             if ast[0]=="<":
                 return a < b
 
-
     if ast[0]=="if":
         if evaluate(ast[1], env)==True:
             return evaluate(ast[2], env)
         if evaluate(ast[1], env)==False:
             return evaluate(ast[3], env)
-
 
     if is_symbol(ast):
         return env.lookup(ast)
@@ -100,7 +99,17 @@ def evaluate(ast, env):
             closure.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(closure.body, closure.env)
 
-    #
+
+    if is_symbol(ast[0]):
+        clos = env.lookup(ast[0])
+        arguments = ast[1:]
+        parameters = clos.params
+        n = len(arguments)
+        for i in range(n):
+            clos.env.set(parameters[i], evaluate(arguments[i], env))
+        return evaluate(clos.body, clos.env)
+
+
     #if is_symbol(ast[0]):
     #    print ast[0]
     #    value = env.lookup(ast[0])
