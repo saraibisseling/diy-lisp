@@ -16,6 +16,15 @@
     (lambda (a b)
         (or (and a (not b)) (and (not a) b))))
 
+;; mathematical operators
+
+(define >=
+    (lambda (a b)
+        (or (> a b) (= a b))))
+
+(define <=
+    (lambda (a b)
+        (or (< a b) (= a b))))
 ;; DIY -- Implement the rest of your standard library
 ;; here as part 7 of the workshop.
 
