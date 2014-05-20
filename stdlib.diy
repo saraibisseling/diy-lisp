@@ -11,6 +11,11 @@
 (define and
     (lambda (a b)
         (if a (if b #t #f) #f )))
+
+(define xor
+    (lambda (a b)
+        (or (and a (not b)) (and (not a) b))))
+
 ;; DIY -- Implement the rest of your standard library
 ;; here as part 7 of the workshop.
 
