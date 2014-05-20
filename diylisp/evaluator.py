@@ -44,6 +44,8 @@ def evaluate(ast, env):
 
         elif ast[0] == 'cons':
             return eval_cons(ast, env)
+        elif ast[0] == 'head':
+            return eval_head(ast, env)
 
         elif is_symbol(ast[0]) or is_list(ast[0]):
             closure = evaluate(ast[0], env)
@@ -119,3 +121,7 @@ def eval_cons(ast, env):
     head = evaluate(ast[1], env)
     tail = evaluate(ast[2], env)
     return [head] + tail
+
+def eval_head(ast, env):
+    list = evaluate(ast[1], env)
+    return list[0]
