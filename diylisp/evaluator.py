@@ -46,6 +46,10 @@ def evaluate(ast, env):
             return eval_cons(ast, env)
         elif ast[0] == 'head':
             return eval_head(ast, env)
+        elif ast[0] == 'tail':
+            return eval_tail(ast, env)
+        elif ast[0] == 'empty':
+            return eval_empty(ast, env)
 
         elif is_symbol(ast[0]) or is_list(ast[0]):
             closure = evaluate(ast[0], env)
@@ -125,7 +129,7 @@ def eval_cons(ast, env):
 
 
 def eval_head(ast, env):
-    if is_empty_(ast, env):
+    if eval_empty(ast, env):
         raise LispError("Empty list")
 
     else:
@@ -133,6 +137,13 @@ def eval_head(ast, env):
     return list[0]
 
 
-def is_empty_(ast, env):
+def eval_empty(ast, env):
     list = evaluate(ast[1], env)
     return len(list) == 0
+
+def eval_tail(ast, env):
+    if eval_empty(ast, env):
+        raise LispError("Empty list")
+    else:
+        list = evaluate(ast[1], env)
+    return list[1:]
