@@ -19,32 +19,32 @@ in a day, after all.)
 # define operators
 math_operators = ["+", "-", "/", ">", "<", "mod", "*"]
 
+
 def evaluate(ast, env):
     """Evaluate an Abstract Syntax Tree in the specified environment."""
 
 
     # ast = boolean
     if is_boolean(ast):
-      return ast
+        return ast
 
     # ast = integer
     if is_integer(ast):
         return ast
 
     # ast starts with "quote"
-    if ast[0]=="quote":
+    if ast[0] == "quote":
         return ast[1]
 
-    if ast[0]=="atom":
+    if ast[0] == "atom":
         return is_atom(evaluate(ast[1], env))
 
-
-    if ast[0]=="eq":
-        if is_atom(evaluate(ast[1], env))==False:
-            return False
-
+    if ast[0] == "eq":
         a = evaluate(ast[1], env)
         b = evaluate(ast[2], env)
+        if is_atom(a) == False or is_atom(b) == False:
+            return False
+
         return a == b
 
     if ast[0] in math_operators:
@@ -52,50 +52,49 @@ def evaluate(ast, env):
         b = evaluate(ast[2], env)
         if is_integer(a) and is_integer(b):
 
-            if ast[0]=="+":
+            if ast[0] == "+":
                 return a + b
-            if ast[0]=="*":
+            if ast[0] == "*":
                 return a * b
-            if ast[0]=="-":
+            if ast[0] == "-":
                 return a - b
-            if ast[0]=="/":
+            if ast[0] == "/":
                 return a / b
-            if ast[0]=="mod":
+            if ast[0] == "mod":
                 return a % b
-            if ast[0]==">":
+            if ast[0] == ">":
                 return a > b
-            if ast[0]=="<":
+            if ast[0] == "<":
                 return a < b
 
-    if ast[0]=="if":
-        if evaluate(ast[1], env)==True:
+    if ast[0] == "if":
+        if evaluate(ast[1], env) == True:
             return evaluate(ast[2], env)
-        if evaluate(ast[1], env)==False:
+        else:
             return evaluate(ast[3], env)
 
     if is_symbol(ast):
         return env.lookup(ast)
 
-    if ast[0]=="define":
-        if not len(ast)==3:
+    if ast[0] == "define":
+        if not len(ast) == 3:
             raise LispError("Wrong number of arguments")
         if not is_symbol(ast[1]):
             raise LispError("non-symbol")
         s = ast[1]
-        v  = evaluate(ast[2], env)
+        v = evaluate(ast[2], env)
         env.set(s, v)
         print s
         return s
 
-    if ast[0]=="lambda":
+    if ast[0] == "lambda":
         print ast[0]
         print ast[0]
-        if not len(ast)==3:
+        if not len(ast) == 3:
             raise LispError("number of arguments")
         if not is_list(ast[1]):
             raise LispError("params not a list")
         return Closure(env, ast[1], ast[2])
-
 
     if is_closure(ast[0]):
         closure = ast[0]
@@ -108,7 +107,6 @@ def evaluate(ast, env):
         for i in range(n):
             closure.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(closure.body, closure.env)
-
 
     if is_symbol(ast[0]):
         clos = env.lookup(ast[0])
@@ -136,8 +134,8 @@ def evaluate(ast, env):
         for i in range(n):
             clos.env.set(parameters[i], evaluate(arguments[i], env))
         return evaluate(clos.body, clos.env)
-    else: raise LispError("not a function")
-
+    else:
+        raise LispError("not a function")
 
     print ast
     raise LispError("Not able to evaluate")
