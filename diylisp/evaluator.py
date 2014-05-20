@@ -63,14 +63,14 @@ def eval_math(ast, env):
     a2 = evaluate(ast[2], env)
     if is_integer(a1) and is_integer(a2):
         operators = {
-        '+': a1 + a2,
-        '-': a1 - a2,
-        '/': a1 / a2,
-        '*': a1 * a2,
-        'mod': a1 % a2,
-        '>': a1 > a2,
-        '<': a1 < a2,
-        '=': a1 == a2}
+            '+': a1 + a2,
+            '-': a1 - a2,
+            '/': a1 / a2,
+            '*': a1 * a2,
+            'mod': a1 % a2,
+            '>': a1 > a2,
+            '<': a1 < a2,
+            '=': a1 == a2}
         return operators[ast[0]]
     else:
         raise LispError("Math operators only work on integers!")
@@ -117,11 +117,22 @@ def eval_closure(ast, env):
             closure.env = closure.env.extend({param: arg})
         return evaluate(closure.body, closure.env)
 
+
 def eval_cons(ast, env):
     head = evaluate(ast[1], env)
     tail = evaluate(ast[2], env)
     return [head] + tail
 
+
 def eval_head(ast, env):
-    list = evaluate(ast[1], env)
+    if is_empty_(ast, env):
+        raise LispError("Empty list")
+
+    else:
+        list = evaluate(ast[1], env)
     return list[0]
+
+
+def is_empty_(ast, env):
+    list = evaluate(ast[1], env)
+    return len(list) == 0
