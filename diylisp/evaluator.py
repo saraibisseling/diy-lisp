@@ -41,6 +41,10 @@ def evaluate(ast, env):
             eval_define(ast, env)
         elif ast[0] == 'lambda':
             return eval_lambda(ast, env)
+
+        elif ast[0] == 'cons':
+            return eval_cons(ast, env)
+
         elif is_symbol(ast[0]) or is_list(ast[0]):
             closure = evaluate(ast[0], env)
             return evaluate([closure] + ast[1:], env)
@@ -110,3 +114,8 @@ def eval_closure(ast, env):
             param = parameters[i]
             closure.env = closure.env.extend({param: arg})
         return evaluate(closure.body, closure.env)
+
+def eval_cons(ast, env):
+    head = evaluate(ast[1], env)
+    tail = evaluate(ast[2], env)
+    return [head] + tail
